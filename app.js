@@ -1,7 +1,15 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 const books = require('./routes/books');
+
+const url = "mongodb://localhost:27017/library_mongoose";
+mongoose.connect(url,(err) => {
+  if (!err) {
+    console.log('Success Connect To Database!');
+  }
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
