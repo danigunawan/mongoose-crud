@@ -1,57 +1,57 @@
-const books = require('../models/books');
+const Book = require('../models/books');
 
 module.exports = {
   index : (req,res) => {
-    books.findAll().then((books) => {
-      res.status(200).json({
-        message: 'Read All Books',
+    Book.find({}).exec((err,books) => {
+      if (err) {
+        return res.status(500).json({
+          message: "Something Went Wrong"
+        });
+      }
+      return res.status(200).json({
+        message: 'Success Read Book Collections',
         data: books
-      });
-    }).catch((err) => {
-      console.log(err);
-      res.status(500).json({
-        message: 'Something Went Wrong'
       });
     });
   },
   create: (req,res) => {
-    books.create(req.body).then((book) => {
-      res.status(200).json({
-        message: 'Success Create New Book',
+    Book.create(req.body,(err,book) => {
+      if (err) {
+        return res.status(500).json({
+          message: "Something Went Wrong"
+        });
+      }
+      return res.status(200).json({
+        message: 'Success Add a Book Collection',
         data: book
-      });
-    }).catch((err) => {
-      console.log(err);
-      res.status(500).json({
-        message: 'Something Went Wrong'
       });
     });
   },
   destroy: (req,res) => {
     const id = req.params.id;
-    books.destroy(id).then((book) => {
-      res.status(200).json({
-        message: 'Success Delete a Book',
+    Book.findOneAndRemove({ _id : id},(err,book) => {
+      if (err) {
+        return res.status(500).json({
+          message: "Something Went Wrong"
+        });
+      }
+      return res.status(200).json({
+        message: 'Success Delete Book Collections',
         data: book
-      });
-    }).catch((err) => {
-      console.log(err);
-      res.status(500).json({
-        message: 'Something Went Wrong'
       });
     });
   },
   update: (req,res) => {
     const id = req.params.id;
-    books.update(id,req.body).then((book) => {
-      res.status(200).json({
-        message: 'Success Update a Book',
+    Book.findOneAndUpdate({ _id : id},req.body,{new: true},(err,book) => {
+      if (err) {
+        return res.status(500).json({
+          message: "Something Went Wrong"
+        });
+      }
+      return res.status(200).json({
+        message: 'Success Delete Book Collections',
         data: book
-      });
-    }).catch((err) => {
-      console.log(err);
-      res.status(500).json({
-        message: 'Something Went Wrong'
       });
     });
   }
