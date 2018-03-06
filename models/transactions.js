@@ -6,7 +6,7 @@ const transactionSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Customer'
   } ,
-  days: String,
+  days: Number,
   out_date: Date,
   due_date: Date,
   in_date: Date,
@@ -14,7 +14,6 @@ const transactionSchema = new Schema({
   booklist:[{
     type: Schema.Types.ObjectId,
     ref: 'Book'
-
   }],
 });
 
