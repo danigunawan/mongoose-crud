@@ -18,16 +18,7 @@ module.exports = {
     });
   },
   create: (req,res) => {
-    let input = {
-      member: req.body.member,
-      days: req.body.days,
-      out_date: req.body.out_date,
-      due_date: req.body.due_date,
-      in_date: req.body.in_date,
-      fine: req.body.fine,
-      booklist:[req.body.book],
-    }
-    Transaction.create(input,(err,transaction) => {
+    Transaction.create(req.body,(err,transaction) => {
       if (err) {
         return res.status(500).json({
           message: "Something Went Wrong"
@@ -55,11 +46,7 @@ module.exports = {
   },
   update: (req,res) => {
     const id = req.params.id;
-    let input = req.body;
-    if (req.body.book) {
-      input.booklist.push(req.body.book);
-    }
-    Transaction.findOneAndUpdate({ _id : id},input,{new: true},(err,transaction) => {
+    Transaction.findOneAndUpdate({ _id : id},req.body,{new: true},(err,transaction) => {
       if (err) {
         return res.status(500).json({
           message: "Something Went Wrong"

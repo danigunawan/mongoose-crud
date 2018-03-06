@@ -7,7 +7,10 @@ const transactionSchema = new Schema({
     ref: 'Customer'
   } ,
   days: Number,
-  out_date: Date,
+  out_date: {
+    type: Date,
+    default: Date.now
+  },
   due_date: Date,
   in_date: Date,
   fine: Number,
