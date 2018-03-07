@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const Book = require('./books');
 
 const transactionSchema = new Schema({
   member: {
@@ -25,6 +26,18 @@ transactionSchema.pre('save', function(next) {
   due_date.setDate(due_date.getDate() + this.days);
   this.due_date = due_date;
   this.fine = 0;
+  let books = this.booklist;
+  for (var i = 0; i < books.length; i++) {
+    Book.findOne({_id: books[i]},(err,data) => {
+      let currentStock = data.stock - 1;
+      Book.update({_id:data._id},{$set:{ stock: currentStock }},(err,data) => {
+        if (err) {
+          console.log(err);
+        }
+        console.log(data);
+      })
+    })
+  }
   next();
 });
 
@@ -46,6 +59,38 @@ transactionSchema.pre('findOneAndUpdate', function(next) {
       }
       console.log(data);
     });
+    let books = data.booklist;
+    for (var i = 0; i < books.length; i++) {
+      Book.findOne({_id: books[i]},(err,data) => {
+        let currentStock = data.stock + 1;
+        Book.update({_id:data._id},{$set:{ stock: currentStock }},(err,data) => {
+          if (err) {
+            console.log(err);
+          }
+          console.log(data);
+        })
+      })
+    }
+  })
+  next();
+});
+
+transactionSchema.pre('findOneAndRemove', function(next) {
+  let id = this._conditions._id;
+  let Transaction = this;
+  this.findOne({_id:id },(err,data) => {
+    let books = data.booklist;
+    for (var i = 0; i < books.length; i++) {
+      Book.findOne({_id: books[i]},(err,data) => {
+        let currentStock = data.stock + 1;
+        Book.update({_id:data._id},{$set:{ stock: currentStock }},(err,data) => {
+          if (err) {
+            console.log(err);
+          }
+          console.log(data);
+        })
+      })
+    }
   })
   next();
 });
